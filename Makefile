@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = 
 SFMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-SRC = main.cpp basic_math.cpp entities.cpp
+SRC = main.cpp basic_math.cpp entities.cpp collision.cpp
 TARGET = main
 
 all: $(TARGET)

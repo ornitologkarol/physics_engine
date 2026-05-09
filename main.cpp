@@ -4,6 +4,7 @@
 #include <iostream>
 #include "basic_math.hpp"
 #include "entities.hpp"
+#include "collision.hpp"
 
 const int window_width = 1600;
 const int window_height = 1200;
@@ -14,8 +15,8 @@ int main() {
     window.setFramerateLimit(60);
     sf::Event event;
     sf::Clock clock;
-
     float dt;
+    
     int idx = 0;
     sf::VertexArray triangle(sf::PrimitiveType::Triangles, 10000);
     unsigned int capacity = 10000;
@@ -40,9 +41,11 @@ int main() {
             shapes.push_back(std::make_unique<circle>(100.0, 30, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0));
         }
 
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         for(auto &shape : shapes) { // moving all the circles
             shape->move(dt);
-        }
+            wall_collision(*shape, window_width, window_height);
+        }}
 
         // drawing 
         window.clear(sf::Color::Black);
