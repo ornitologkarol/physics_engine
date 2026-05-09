@@ -1,4 +1,7 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
+#include <iostream>
 #include "basic_math.hpp"
 #include "entities.hpp"
 
@@ -13,26 +16,46 @@ int main() {
     sf::Clock clock;
 
     float dt;
-    sf::VertexArray triangle(sf::PrimitiveType::Triangles, 10000);
     int idx = 0;
-    circle shape = circle(100.0, 30, vector2d(800.0, 600.0), vector2d(500, 45, false), 20.0);
+    sf::VertexArray triangle(sf::PrimitiveType::Triangles, 10000);
+    unsigned int capacity = 10000;
+    std::vector<std::unique_ptr<circle>> shapes;
     
     while(window.isOpen()) {
+        std::cout << int(1.0/dt) << " " << shapes.size() << "\n";
 
         sf::Time elapsed = clock.restart();
-        dt = elapsed.asSeconds();
+        dt = elapsed.asSeconds(); // calculating deltatime
         
         while(window.pollEvent(event)) {
             if(event.type == sf::Event::Closed)
                 window.close();
+            if(event.type == sf::Event::MouseButtonPressed) {
+                if(event.mouseButton.button == sf::Mouse::Left) {
+                    shapes.push_back(std::make_unique<circle>(100.0, 30, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(),20.0));
+                }
+            }
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // adding a circle
+            shapes.push_back(std::make_unique<circle>(100.0, 30, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0));
         }
 
-        shape.move(dt);
+        for(auto &shape : shapes) { // moving all the circles
+            shape->move(dt);
+        }
 
+        // drawing 
         window.clear(sf::Color::Black);
         idx = 0;
-        shape.fill_array(triangle, idx);
+        for(auto &shape : shapes) { // drawing all the circles
+            if (capacity <= idx + shape->sides * 3) { // checking capacity
+                capacity *= 2;
+                triangle.resize(capacity);
+            }
+            shape->fill_array(triangle, idx);
+        }
         window.draw(triangle);
         window.display();
+        // end of drawing
     }
 }

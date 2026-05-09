@@ -12,29 +12,7 @@ circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velo
     mass(n_mass),
     angle(0.0) {}
 
-void circle::fill_array(sf::VertexArray &triangles, int &idx) {
-    // in sf vertex array each three points represent a single triangle
-    // using radius i calulate every small triangle (that starts in the center) for each side of my circle 
-    float angle_change = 6.28 / sides;
-    float rotation = angle;
-    
-    vector2d point_first = vector2d(radius, rotation, true);
-    point_first.add(position);
-    
-    vector2d point_second; 
-    rotation += angle_change;
-
-    vector2d temp_point_first = point_first;
-    
-    for (int i = 0; i < sides; i++) {
-        if (i == sides - 1) {
-            point_second = temp_point_first;
-            // if i calulated new point_second for the last point (which is the same as the very first) there would be a slight gap, due to floating point errors
-        } else {
-            point_second = vector2d(radius, rotation, true);
-            point_second.add(position);
-        }
-
+void fill(sf::VertexArray &triangles, int &idx, vector2d position, vector2d point_first, vector2d point_second) {
         triangles[idx].position.x = position.x;
         triangles[idx].position.y = position.y;
         triangles[idx].color = sf::Color::White;
@@ -47,10 +25,30 @@ void circle::fill_array(sf::VertexArray &triangles, int &idx) {
         triangles[idx].position.y = point_second.y;
         triangles[idx].color = sf::Color::White;
         idx++;
+}
+
+void circle::fill_array(sf::VertexArray &triangles, int &idx) {
+    // in sf vertex array, each three points represent a single triangle
+    // using radius i calulate every small triangle (that starts in the center) for each side of my shape 
+    float angle_change = 6.28 / sides;
+    float rotation = angle;
+    
+    vector2d point_first = vector2d(radius, rotation, true); 
+    point_first.add(position); // vector = (point - center) + center = point
+    vector2d point_second; 
+    vector2d temp_point_first = point_first; // if i calulated new point_second for the last point (which is the same as the very first) there would be a slight gap, due to floating point errors
+    
+    rotation += angle_change;
+    for (int i = 0; i < sides - 1; i++) {
+        point_second = vector2d(radius, rotation, true);
+        point_second.add(position);
+
+        fill(triangles, idx, position, point_first, point_second);
 
         point_first = point_second;
         rotation += angle_change;
     }
+    fill(triangles, idx, position, point_first, temp_point_first);
 }
 
 void circle::move(float dt) {
