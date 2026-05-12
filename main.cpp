@@ -38,14 +38,20 @@ int main() {
             }
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // adding a circle
-            shapes.push_back(std::make_unique<circle>(100.0, 30, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0));
+            shapes.push_back(std::make_unique<circle>(10.0, 30, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0));
         }
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        for(auto &shape : shapes) { // moving all the circles
-            shape->move(dt);
-            wall_collision(*shape, window_width, window_height);
-        }}
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { // all movement here
+            for(auto &shape : shapes) { // moving all the circles
+                shape->move(dt);
+                wall_collision(*shape, window_width, window_height);
+            }
+            for(int i=0; i<shapes.size(); i++) {
+                for(int j=i; j < shapes.size(); j++) {
+                    circle_collision(*shapes[i], *shapes[j]);
+                }
+            }
+        }
 
         // drawing 
         window.clear(sf::Color::Black);
