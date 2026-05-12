@@ -4,6 +4,7 @@ class vector2d {
     public:
     float x;
     float y;
+
     vector2d();
     vector2d(float a, float b);
     vector2d(float lenght, float angle, bool radians);

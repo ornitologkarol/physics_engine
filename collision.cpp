@@ -1,5 +1,4 @@
 #include <cmath>
-#include <vector>
 #include "basic_math.hpp"
 #include "entities.hpp"
 #include "collision.hpp"
@@ -46,10 +45,4 @@ bool circle_collision(circle &shape1, circle &shape2) {
         return true;
     }
     return false;
-}
-
-
-void space_partition(std::vector<circle> &shapes) {
-    const int rows = 5;
-    const int cols = 5; 
 }
