@@ -1,13 +1,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <memory>
 #include <vector>
 #include "entities.hpp"
 
 class game {
     public:
-    std::vector<std::unique_ptr<circle>> objects;
+    std::vector<circle> objects;
     sf::VertexArray triangles;
     unsigned int capacity = 10000;
 

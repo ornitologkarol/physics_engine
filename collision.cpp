@@ -28,8 +28,11 @@ bool wall_collision(circle& shape, int window_width, int window_height) {
 
 bool circle_collision(circle &shape1, circle &shape2) {
     // hardcoded collision resolver should be temporary
-    float dist = sqrt((shape1.position.x - shape2.position.x) * (shape1.position.x - shape2.position.x)  + (shape1.position.y - shape2.position.y) *(shape1.position.y - shape2.position.y));
+    float dist = (shape1.position.x - shape2.position.x) * (shape1.position.x - shape2.position.x)  + (shape1.position.y - shape2.position.y) *(shape1.position.y - shape2.position.y);
     float rad_sum = shape1.radius + shape2.radius;
+    if (dist >= rad_sum * rad_sum )
+        return false;
+    dist = sqrt(dist);
     vector2d mtv;
     if (dist < rad_sum) {
         mtv = shape2.position;
