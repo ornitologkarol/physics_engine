@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <cmath>
-#include <iostream>
 
 #include "basic_math.hpp"
 #include "entities.hpp"
@@ -9,30 +8,34 @@
 #include "game.hpp"
 
 void space_partition(std::vector<circle> &shapes, const int window_width, const int window_height) {
-    // this was a bootleneck, make it work!
-    const int rows = 30;
-    const int columns = 16;
+    const int rows = window_width / 20;
+    const int columns = window_height / 20;
     
     int a = floor((float)window_height / columns / 2);
     int b = floor((float)window_width / rows / 2);
     const int max_radius = (a < b) ? a : b;
 
-    static int grid[rows * columns];
+    int grid[rows * columns]; // our grid stores the index of the last obj each cell
     for(int i=0; i< rows * columns; i++) {
         grid[i] = -1;
     }
     
-    std::vector<int> prev_idx;
-    prev_idx.clear();
+   static std::vector<int> prev_idx; // the prev_idx stores the index to the previous object in a cell for each obj, -1 i this is the first obj
+   prev_idx.clear();
+
+   static std::vector<int> big_idx; // for shapes with radius > max_radius we cannot use space partitioning 
+   big_idx.clear();
 
     int idx = 0;
     for (auto &shape : shapes) {
+        if(shape.radius > max_radius) { // we check if the object isnt to big
+            big_idx.push_back(idx);
+            prev_idx.push_back(-1);
+            idx++;
+            continue;
+        }
         int r = floor(shape.position.x * rows / window_width);
         int c = floor(shape.position.y * columns / window_height);
-
-        if(r*columns + c >= rows*columns) {
-            std::cout << "tutaj4 " << r << " "<< c << "\n";
-        }
 
         if(grid[r * columns + c] == -1) { // this if is redundant, but it makes clear what the code does
             prev_idx.push_back(-1);
@@ -45,18 +48,30 @@ void space_partition(std::vector<circle> &shapes, const int window_width, const 
         idx++;
     }
 
-    static int qwerty[] = {-1, 0, 1};
-    for(int i=0; i<rows*columns; i++) {
-        int l = grid[i];
-        while(l != -1) {
-            int m = prev_idx[l];
-            while(m != -1) {
-                circle_collision(shapes[l], shapes[m]);
-                m = prev_idx[m];
+    for(int r=0; r < rows; r++) {
+        for(int c=0; c < columns; c++) {
+            int l = grid[r * columns + c];
+            while(l != - 1) {
+                for(int x = -1; x <= 1; x++) { // we need to check all the neighbouring cells also
+                    for(int y=-1; y <= 1; y++) {
+                        if(r+x >= rows || c+y >= columns || r+x <0 || c+y < 0) continue;
+                        int m = grid[(r+x) * columns + (c+y)];
+                        while (m != -1) {
+                            if( m != l) circle_collision(shapes[l], shapes[m]);
+                            m = prev_idx[m];
+                        }
+                    }
+                }
+                l = prev_idx[l];
             }
-            l = prev_idx[l];
         }
     }
+
+     for(int i : big_idx) { // if there are few big shapes this is linear
+         for(int j=0; j<shapes.size(); j++) {
+             if (i != j) circle_collision(shapes[i], shapes[j]);
+         }
+     }
     
 }
 
