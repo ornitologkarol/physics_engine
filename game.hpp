@@ -10,9 +10,6 @@ class game {
     sf::VertexArray triangles;
     unsigned int capacity = 10000;
 
-    const int window_width;
-    const int window_height;
-
     game(int width, int height);
     void update(float dt);
     void add(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass);

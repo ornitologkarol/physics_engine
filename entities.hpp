@@ -14,6 +14,11 @@ class circle {
     float mass;
     float angle;
 
+    // color
+    int red; 
+    int green;
+    int blue;
+
     circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass);
     void fill_array(sf::VertexArray &triangles, int &idx);
     void move(float dt);

@@ -3,19 +3,17 @@
 #include <iostream>
 #include "basic_math.hpp"
 #include "game.hpp"
-
-const int window_width = 3000;
-const int window_height = 1600;
+#include "config.hpp"
 
 int main() {
     sf::RenderWindow window;
-    window.create(sf::VideoMode(window_width, window_height), "Engine");
+    window.create(sf::VideoMode(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT), "Engine");
     window.setFramerateLimit(60);
     sf::Event event;
     sf::Clock clock;
     float dt;
 
-    game game(window_width, window_height);
+    game game(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT);
     
     while(window.isOpen()) {
         std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
@@ -28,15 +26,17 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(100.0, 20, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0);
+                    game.add(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 45, false),20.0);
                 }
             }
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // adding a circle
-            game.add(10.0, 4, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0);
+            for(int i = 0; i < 5; i++)
+            game.add(20.0, 4, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0);
         }
 
-        game.update(dt);
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            game.update(dt);
         game.draw(window);
 
     }
