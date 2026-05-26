@@ -2,6 +2,8 @@
 #include <vector>
 
 #include "basic_math.hpp"
+#include "collision.hpp"
+#include "config.hpp"
 #include "entities.hpp"
 #include "game.hpp"
 #include "space.hpp"
@@ -11,8 +13,9 @@ game::game(int width, int height) : triangles(sf::PrimitiveType::Triangles, 1000
 void game::update(float dt) {
     for(auto &obj : objects) {
          obj.move(dt);
+         wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
     }
-   space_partition(objects);
+    space_partition(objects);
 }
 
 void game::add(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass) {

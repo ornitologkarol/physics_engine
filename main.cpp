@@ -26,7 +26,7 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 45, false),20.0);
+                    game.add(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, -45, false),20.0);
                 }
             }
         }

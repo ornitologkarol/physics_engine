@@ -8,4 +8,3 @@ class pair {
 };
 
 void space_partition(std::vector<circle> &shapes);
-void relaxation(std::vector<circle> &shapes, std::vector<pair> &circle_circle, std::vector<int> &circle_wall);

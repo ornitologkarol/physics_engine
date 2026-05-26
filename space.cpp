@@ -49,12 +49,6 @@ void space_partition(std::vector<circle> &shapes) {
         idx++;
     }
 
-    static std::vector<int> circle_wall;
-    circle_wall.clear();
-
-    static std::vector<pair> circle_circle;
-    circle_circle.clear();
-
     for(int r=0; r < rows; r++) {
         for(int c=0; c < columns; c++) {
             int l = grid[r * columns + c];
@@ -64,8 +58,8 @@ void space_partition(std::vector<circle> &shapes) {
                         if(r+x >= rows || c+y >= columns || r+x <0 || c+y < 0) continue;
                         int m = grid[(r+x) * columns + (c+y)];
                         while (m != -1) {
-                            if( m < l and circle_broad(shapes[m], shapes[l])) {
-                                circle_circle.push_back(pair(m, l));
+                            if( m < l and circle_collision(shapes[m], shapes[l])) {
+                                ;
                             }
                             m = prev_idx[m];
                         }
@@ -78,35 +72,10 @@ void space_partition(std::vector<circle> &shapes) {
 
      for(int i : big_idx) { // if there are few big shapes this is linear
          for(int j=0; j<shapes.size(); j++) {
-             if (i < j and circle_broad(shapes[i], shapes[j])) {
-                circle_circle.push_back(pair(i, j));
+             if (i != j and circle_collision(shapes[i], shapes[j], 10)) {
+                ;
              }
          }
      }
-
-     for(int i=0; i < shapes.size(); i++) {
-         if(wall_broad(shapes[i], Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT)) {
-            circle_wall.push_back(i);
-         }
-     }
-
-    relaxation(shapes, circle_circle, circle_wall);
 }
    
-void relaxation(std::vector<circle> &shapes, std::vector<pair> &circle_circle, std::vector<int> &circle_wall) {
-    vector2d mtv;
-    
-    for(pair p : circle_circle) {
-        if(circle_collision(shapes[p.idx], shapes[p.idy], mtv)) {
-            mtv.multiply(1.f/2.f);
-            shapes[p.idy].position.add(mtv);
-            shapes[p.idx].position.subtract(mtv);
-        }
-    }
-
-    for(int i : circle_wall) {
-        if(wall_collision(shapes[i], Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, mtv)) {
-            shapes[i].position.add(mtv);
-        }
-    }
-}
