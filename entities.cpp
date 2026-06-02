@@ -16,7 +16,7 @@ circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velo
     red(rand()%256),
     green(rand()%256),
     blue(rand()%256) {}
-
+    
 void fill(sf::VertexArray &triangles, int &idx, vector2d position, vector2d point_first, vector2d point_second, int red, int green, int blue) {
         triangles[idx].position.x = position.x;
         triangles[idx].position.y = position.y;

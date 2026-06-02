@@ -1,5 +1,5 @@
 #include <cmath>
-#include <iostream>
+#include <cstdlib>
 #include "basic_math.hpp"
 #include "entities.hpp"
 #include "collision.hpp"
@@ -55,8 +55,9 @@ bool circle_collision(circle &shape1, circle &shape2, float slop, float percenta
         mtv.subtract(shape1.position);
         if (fabs(dist) <= 1e-9) { // risk of division by zero
             dist = 1;
+            float temp = ((double)rand()) / RAND_MAX;
 
-            mtv = vector2d(1,0);
+            mtv = vector2d(temp,1-temp);
         }
 
         mtv.multiply(percentage*(rad_sum - dist)/dist);
@@ -65,6 +66,41 @@ bool circle_collision(circle &shape1, circle &shape2, float slop, float percenta
         mtv.multiply(1.0/2.0);
         shape2.position.add(mtv);
         shape1.position.subtract(mtv);
+        collision_resolve(shape1, shape2);
         return true;
     }
-    return false;}
+    return false;
+}
+
+void collision_resolve(circle& shape1, circle& shape2) {
+    // this works this way:
+    // - we project relative speed onto the normal (collision axis) = vreln
+    // - we use this equation for magnitude j = (1+e)*vreln / (1/m1 + 1/m2)
+    // - we make it a vector J = j*n
+    // - delta v1 = J/m1, delta v2 = -J/m2
+    
+    
+    float e = 1.f;
+    
+    vector2d normal = shape1.position;
+    normal.subtract(shape2.position);
+    float distance = normal.lenght();
+    normal.multiply(1/distance);
+
+    vector2d v_rel = shape2.velocity;
+    v_rel.subtract(shape1.velocity);
+
+    float normal_rel = dot(normal, v_rel);
+    float inv_mass = 1.f/shape1.mass + 1.f/shape2.mass;
+    float magnitude = (1.f+e) * normal_rel / inv_mass;
+
+    vector2d impulse = normal;
+    impulse.multiply(magnitude);
+    vector2d delta1 = impulse;
+    delta1.multiply(1.f/shape1.mass);
+    vector2d delta2 = impulse;
+    delta2.multiply(1.f/shape2.mass);
+
+    shape1.velocity.add(delta1);
+    shape2.velocity.subtract(delta2);
+}

@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <vector>
 #include <iostream>
 #include "basic_math.hpp"
@@ -6,9 +7,11 @@
 #include "config.hpp"
 
 int main() {
+    srand(time(NULL));
     sf::RenderWindow window;
     window.create(sf::VideoMode(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT), "Engine");
     window.setFramerateLimit(60);
+    window.setKeyRepeatEnabled(false);
     sf::Event event;
     sf::Clock clock;
     float dt;
@@ -16,7 +19,7 @@ int main() {
     game game(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT);
     
     while(window.isOpen()) {
-        std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
+        //std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
 
         sf::Time elapsed = clock.restart();
         dt = elapsed.asSeconds(); // calculating deltatime
@@ -26,7 +29,12 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, -45, false),20.0);
+                    game.add(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(500, -45, false),20.0);
+                }
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if(event.key.code == sf::Keyboard::W) {
+                    //game.update(dt);
                 }
             }
         }
@@ -35,8 +43,7 @@ int main() {
             game.add(20.0, 4, vector2d(800.0, 600.0), vector2d(500, 45, false),20.0);
         }
 
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-            game.update(dt);
+        game.update(dt);
         game.draw(window);
 
     }

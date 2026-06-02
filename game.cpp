@@ -16,6 +16,9 @@ void game::update(float dt) {
          wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
     }
     space_partition(objects);
+    for(auto &obj : objects) {
+         wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
+    }
 }
 
 void game::add(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass) {
