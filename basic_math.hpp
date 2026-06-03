@@ -14,6 +14,7 @@ class vector2d {
     void multiply(float num);
     vector2d perpendicular();
     void rotate(float angle);
+    void normalize();
 };
 
 float dot(vector2d a, vector2d b);

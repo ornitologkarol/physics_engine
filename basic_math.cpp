@@ -46,6 +46,12 @@ void vector2d::rotate(float angle) {
     y = x_temp * sin_temp + y * cos_temp;
 }
 
+void vector2d::normalize() {
+    float dist = lenght();
+    x /= dist;
+    y /= dist;
+}
+
 float dot(vector2d a, vector2d b) {
     return (a.x * b.x) + (a.y * b.y);
 }

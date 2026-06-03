@@ -30,7 +30,46 @@ bool wall_collision(circle& shape, int window_width, int window_height, float sl
     shape.position.add(mtv);
     
     return (mtv.x != 0 || mtv.y != 0);
+}
+
+bool sat(circle &shape1, circle &shape2, vector2d &mtv, float slop) {
+    vector2d points1[shape1.sides], points2[shape2.sides], edges_perp1[shape1.sides], edges_perp2[shape2.sides];
+
+    shape1.get_points_edges(points1, edges_perp1);
+    shape2.get_points_edges(points2, edges_perp2);
+
+    float min_magnitude;
+    vector2d min_mtv;
+    for (auto edge : edges_perp1) {
+        edge.normalize();
+        float min1, min2, max1, max2;
+        
+        min1 = dot(edge, points1[0]);
+        max1 = min1;
+        for(int i=1; i < shape1.sides; i++) {
+            float projection = dot(edge, points1[i]);
+            min1 = (projection < min1) ? projection : min1;
+            max1 = (projection > max1) ? projection : max1;
+        }
+
+        min2 = dot(edge, points2[0]);
+        max2 = min2;
+        for(int i=1; i < shape2.sides; i++) {
+            float projection = dot(edge, points2[i]);
+            min2 = (projection < min2) ? projection : min2;
+            max2 = (projection > max2) ? projection : max2;
+        }
+
+        if(!(min2 < max1 && max2 > min1)) return false;
+        if(max1 - min2 < min_magnitude) {
+           ; 
+        }
+        if(max2 - min1 < min_magnitude) {
+            ;
+        }
     }
+    // here i have to do the same for edges_perp2
+}
 
 bool circle_collision(circle &shape1, circle &shape2, float slop) {
  // hardcoded collision resolver should be temporary
@@ -57,9 +96,12 @@ bool circle_collision(circle &shape1, circle &shape2, float slop) {
         mtv.multiply((rad_sum - dist)/dist);
 
         //applying mtv to objs
-        mtv.multiply(1.0/2.0);
-        shape2.position.add(mtv);
-        shape1.position.subtract(mtv);
+        vector2d deltaA = mtv;
+        vector2d deltaB = mtv;
+        deltaA.multiply(shape2.mass/(shape1.mass + shape2.mass));
+        deltaB.multiply(shape1.mass/(shape1.mass + shape2.mass));
+        shape2.position.add(deltaB);
+        shape1.position.subtract(deltaA);
         return true;
     }
     return false;

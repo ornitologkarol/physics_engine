@@ -37,7 +37,7 @@ int main() {
             }
             if (event.type == sf::Event::KeyPressed) {
                 if(event.key.code == sf::Keyboard::W) {
-                    //game.update(dt);
+                    game.update(dt);
                 }
             }
         }

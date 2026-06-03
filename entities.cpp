@@ -25,7 +25,7 @@ circle::circle(float n_radius, int n_sides, vector2d n_position) :
     position(n_position),
     velocity(),
     force(vector2d()),
-    mass(0),
+    mass(10000000000),
     angle(0.f),
     red(rand()%256),
     green(rand()%256),
@@ -78,4 +78,35 @@ void circle::move(float dt) {
 void circle::accelerate(float dt) {
     velocity.x += force.x/mass * dt;
     velocity.y += force.y/mass * dt;
+}
+
+void circle::get_points_edges(vector2d* points, vector2d* edges) {
+    //edges are actually perpendicular for sat
+    
+    float angle_change = DOUBLE_PI / static_cast<float>(sides);
+    float rotation = angle;
+    
+    vector2d point_first = vector2d(radius, rotation, true); 
+    point_first.add(position);
+    points[0] = point_first;
+
+    vector2d point_second; 
+    vector2d temp_point_first = point_first;
+    
+    rotation += angle_change;
+    for (int i = 1; i < sides; i++) {
+        point_second = vector2d(radius, rotation, true);
+        point_second.add(position);
+
+        points[i] = point_first;
+        edges[i] = point_second;
+        edges[i].subtract(point_first);
+        edges[i] = edges[i].perpendicular();
+
+        point_first = point_second;
+        rotation += angle_change;
+    }
+    edges[0] = temp_point_first;
+    edges[0].subtract(point_first);
+    edges[0] = edges[0].perpendicular();
 }

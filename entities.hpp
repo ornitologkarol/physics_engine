@@ -25,4 +25,5 @@ class circle {
     void fill_array(sf::VertexArray &triangles, int &idx);
     void move(float dt);
     void accelerate(float dt);
+    void get_points_edges(vector2d* points, vector2d* edges);
 };
