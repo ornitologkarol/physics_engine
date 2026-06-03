@@ -12,8 +12,12 @@ game::game(int width, int height) : triangles(sf::PrimitiveType::Triangles, 1000
 
 void game::update(float dt) {
     for(auto &obj : objects) {
-         obj.move(dt);
-         wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
+        if(obj.is_static) continue;
+        obj.force = vector2d(0, 10000);
+        obj.accelerate(dt);
+        obj.force = vector2d();
+        obj.move(dt);
+        wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
     }
     space_partition(objects);
     for(auto &obj : objects) {
@@ -23,6 +27,10 @@ void game::update(float dt) {
 
 void game::add(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass) {
     objects.push_back(circle(n_radius, n_sides, n_position, n_velocity, n_mass));
+}
+
+void game::add_static(float n_radius, int n_sides, vector2d n_position) {
+    objects.push_back(circle(n_radius, n_sides, n_position));
 }
 
 void game::draw(sf::RenderWindow &window) {

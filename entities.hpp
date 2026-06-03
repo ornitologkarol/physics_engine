@@ -5,6 +5,7 @@
 
 class circle {
     public:
+    bool is_static;
     float radius;
     int sides; // circle has sides, because it is really a polygon and the larger the number of size, the closer it looks to a circle
     
@@ -20,6 +21,8 @@ class circle {
     int blue;
 
     circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass);
+    circle(float n_radius, int n_sides, vector2d n_position); //for static objs
     void fill_array(sf::VertexArray &triangles, int &idx);
     void move(float dt);
+    void accelerate(float dt);
 };

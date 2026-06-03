@@ -4,41 +4,35 @@
 #include "entities.hpp"
 #include "collision.hpp"
 
-bool wall_broad(circle &shape, int window_width, int window_height) {
-    return shape.position.x - shape.radius < 0.f || shape.position.x + shape.radius > window_width ||
-           shape.position.y - shape.radius < 0.f || shape.position.y + shape.radius > window_height;
-}
-    
-bool circle_broad(circle &shape1, circle &shape2) {
-    float dist = (shape1.position.x - shape2.position.x) * (shape1.position.x - shape2.position.x)  + (shape1.position.y - shape2.position.y) *(shape1.position.y - shape2.position.y);
-    float rad_sum = shape1.radius + shape2.radius;
-    return dist >= rad_sum;
-}
-
-bool wall_collision(circle& shape, int window_width, int window_height, float slop, float percentage) {
+bool wall_collision(circle& shape, int window_width, int window_height, float slop) {
     vector2d mtv;
     // hardcodes collision resolvers should be temporary
+
+    float x = -1;
     
     if (shape.position.x - shape.radius + slop < 0) {
         mtv.x = shape.radius - shape.position.x;
-        shape.velocity.x *= -1;}
+        shape.velocity.x *= x;
+    }
     else if(shape.position.x + shape.radius - slop > window_width){
         mtv.x = (window_width - shape.position.x) - shape.radius;
-        shape.velocity.x *= -1;}
+        shape.velocity.x *= x;
+    }
     if (shape.position.y - shape.radius + slop < 0) {
         mtv.y = shape.radius - shape.position.y;
-        shape.velocity.y *= -1;}
+        shape.velocity.y *= x;
+    }
     else if(shape.position.y + shape.radius - slop > window_height) {
         mtv.y = (window_height - shape.position.y) - shape.radius;
-        shape.velocity.y *= -1;}
+        shape.velocity.y *= x;
+    }
 
-    mtv.multiply(percentage);
     shape.position.add(mtv);
     
     return (mtv.x != 0 || mtv.y != 0);
     }
 
-bool circle_collision(circle &shape1, circle &shape2, float slop, float percentage) {
+bool circle_collision(circle &shape1, circle &shape2, float slop) {
  // hardcoded collision resolver should be temporary
 
     float dist = (shape1.position.x - shape2.position.x) * (shape1.position.x - shape2.position.x)  + (shape1.position.y - shape2.position.y) *(shape1.position.y - shape2.position.y);
@@ -60,19 +54,19 @@ bool circle_collision(circle &shape1, circle &shape2, float slop, float percenta
             mtv = vector2d(temp,1-temp);
         }
 
-        mtv.multiply(percentage*(rad_sum - dist)/dist);
+        mtv.multiply((rad_sum - dist)/dist);
 
         //applying mtv to objs
         mtv.multiply(1.0/2.0);
         shape2.position.add(mtv);
         shape1.position.subtract(mtv);
-        collision_resolve(shape1, shape2);
         return true;
     }
     return false;
 }
 
 void collision_resolve(circle& shape1, circle& shape2) {
+    // impulse based collision resolver
     // this works this way:
     // - we project relative speed onto the normal (collision axis) = vreln
     // - we use this equation for magnitude j = (1+e)*vreln / (1/m1 + 1/m2)

@@ -60,7 +60,7 @@ void space_partition(std::vector<circle> &shapes) {
                         int m = grid[(r+x) * columns + (c+y)];
                         while (m != -1) {
                             if( m < l && circle_collision(shapes[m], shapes[l])) {
-                                ;
+                                collision_resolve(shapes[m], shapes[l]);
                             }
                             m = prev_idx[m];
                         }
@@ -75,11 +75,11 @@ void space_partition(std::vector<circle> &shapes) {
          for(int j=0; j<shapes.size(); j++) {
              if (shapes[j].radius > Config::MAX_RADIUS) {
                  if (i < j && circle_collision(shapes[i], shapes[j])) {
-                     ;
+                     collision_resolve(shapes[i], shapes[j]);
                  }
              } else {
                  if( i != j && circle_collision(shapes[i], shapes[j])) {
-                     ;
+                     collision_resolve(shapes[i], shapes[j]);
                  }
              }
          }

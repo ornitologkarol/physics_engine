@@ -6,12 +6,26 @@
 #define DOUBLE_PI 6.28318530718f
 
 circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass) :
+    is_static(false),
     radius(n_radius),
     sides(n_sides),
     position(n_position),
     velocity(n_velocity),
     force(vector2d()),
     mass(n_mass),
+    angle(0.f),
+    red(rand()%256),
+    green(rand()%256),
+    blue(rand()%256) {}
+
+circle::circle(float n_radius, int n_sides, vector2d n_position) :
+    is_static(true),
+    radius(n_radius),
+    sides(n_sides),
+    position(n_position),
+    velocity(),
+    force(vector2d()),
+    mass(0),
     angle(0.f),
     red(rand()%256),
     green(rand()%256),
@@ -59,4 +73,9 @@ void circle::fill_array(sf::VertexArray &triangles, int &idx) {
 void circle::move(float dt) {
     position.x += velocity.x * dt;
     position.y += velocity.y * dt;
+}
+
+void circle::accelerate(float dt) {
+    velocity.x += force.x/mass * dt;
+    velocity.y += force.y/mass * dt;
 }
