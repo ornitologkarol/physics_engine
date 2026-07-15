@@ -59,7 +59,7 @@ void space_partition(std::vector<circle> &shapes) {
                         if(r+x >= rows || c+y >= columns || r+x <0 || c+y < 0) continue;
                         int m = grid[(r+x) * columns + (c+y)];
                         while (m != -1) {
-                            if( m < l && circle_collision(shapes[m], shapes[l])) {
+                            if( m < l && final_collision(shapes[m], shapes[l])) {
                                 collision_resolve(shapes[m], shapes[l]);
                             }
                             m = prev_idx[m];
@@ -74,11 +74,11 @@ void space_partition(std::vector<circle> &shapes) {
      for(int i : big_idx) { // if there are few big shapes this is linear
          for(int j=0; j<shapes.size(); j++) {
              if (shapes[j].radius > Config::MAX_RADIUS) {
-                 if (i < j && circle_collision(shapes[i], shapes[j])) {
+                 if (i < j && final_collision(shapes[i], shapes[j])) {
                      collision_resolve(shapes[i], shapes[j]);
                  }
              } else {
-                 if( i != j && circle_collision(shapes[i], shapes[j])) {
+                 if( i != j && final_collision(shapes[i], shapes[j])) {
                      collision_resolve(shapes[i], shapes[j]);
                  }
              }

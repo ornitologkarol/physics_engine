@@ -85,28 +85,18 @@ void circle::get_points_edges(vector2d* points, vector2d* edges) {
     
     float angle_change = DOUBLE_PI / static_cast<float>(sides);
     float rotation = angle;
-    
-    vector2d point_first = vector2d(radius, rotation, true); 
-    point_first.add(position);
-    points[0] = point_first;
 
-    vector2d point_second; 
-    vector2d temp_point_first = point_first;
-    
-    rotation += angle_change;
-    for (int i = 1; i < sides; i++) {
-        point_second = vector2d(radius, rotation, true);
-        point_second.add(position);
-
-        points[i] = point_first;
-        edges[i] = point_second;
-        edges[i].subtract(point_first);
-        edges[i] = edges[i].perpendicular();
-
-        point_first = point_second;
+    for (int i = 0; i < sides; i++) {
+        points[i] = vector2d(radius, rotation, true);
+        points[i].add(position);
         rotation += angle_change;
     }
-    edges[0] = temp_point_first;
-    edges[0].subtract(point_first);
-    edges[0] = edges[0].perpendicular();
+
+    for (int i=0; i < sides; i++) {
+        vector2d edge = points[(i+1)%sides];
+        edge.subtract(points[i]);
+        edge = edge.perpendicular();
+        edges[i] = edge;
+    }
+   
 }

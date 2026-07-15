@@ -19,7 +19,7 @@ int main() {
     game game(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT);
     
     while(window.isOpen()) {
-//        std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
+        std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
 
         sf::Time elapsed = clock.restart();
         dt = elapsed.asSeconds(); // calculating deltatime
@@ -29,10 +29,11 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 45, false),20.0);
+                    game.add(100, 3, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0);
                 }
                 if(event.mouseButton.button == sf::Mouse::Right) {
-                    game.add_static(100, 20, vector2d(event.mouseButton.x, event.mouseButton.y));
+                    //game.add_static(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y));
+                    game.add(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 180, false),20.0);
                 }
             }
             if (event.type == sf::Event::KeyPressed) {
