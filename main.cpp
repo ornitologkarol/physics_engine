@@ -29,11 +29,13 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(100, 3, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0);
+                    game.add(50, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0);
+                    game.objects[game.objects.size()-1].angle += 3.14/4.0;
                 }
                 if(event.mouseButton.button == sf::Mouse::Right) {
-                    //game.add_static(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y));
-                    game.add(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 180, false),20.0);
+                    game.add_static(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y));
+                    game.objects[game.objects.size()-1].angle += 3.14/4.0;
+                    //game.add(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(1000, 180, false),20.0);
                 }
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -44,7 +46,7 @@ int main() {
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // adding a circle
             for(int i=0; i<7; i++)
-            game.add(10.0, 4, vector2d(10.0, 10.0), vector2d(1000, -45, false),20.0);
+            game.add(10.0, 40, vector2d(10.0, 10.0), vector2d(1000, -45, false),20.0);
         }
 
         game.update(dt);

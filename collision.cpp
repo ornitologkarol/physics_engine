@@ -151,7 +151,7 @@ bool circle_collision(circle &shape1, circle &shape2, vector2d &mtv, float slop)
     return false;
 }
 
-void collision_resolve(circle& shape1, circle& shape2) {
+void collision_resolve(circle& shape1, circle& shape2, vector2d mtv) {
     // impulse based collision resolver
     // this works this way:
     // - we project relative speed onto the normal (collision axis) = vreln
@@ -162,10 +162,12 @@ void collision_resolve(circle& shape1, circle& shape2) {
     
     float e = 1.f;
     
-    vector2d normal = shape1.position;
-    normal.subtract(shape2.position);
-    float distance = normal.lenght();
-    normal.multiply(1/distance);
+    //vector2d normal = shape1.position;
+    //normal.subtract(shape2.position);
+    //float distance = normal.lenght();
+    //normal.multiply(1/distance);
+    vector2d normal = mtv;
+    normal.normalize();
 
     vector2d v_rel = shape2.velocity;
     v_rel.subtract(shape1.velocity);
@@ -185,7 +187,7 @@ void collision_resolve(circle& shape1, circle& shape2) {
     shape2.velocity.subtract(delta2);
 }
 
-bool final_collision(circle &shape1, circle &shape2, float slop) {
+bool final_collision(circle &shape1, circle &shape2, vector2d &res, float slop) {
     // broadest phase
     float dist = (shape1.position.x - shape2.position.x) * (shape1.position.x - shape2.position.x)  + (shape1.position.y - shape2.position.y) *(shape1.position.y - shape2.position.y);
     float rad_sum = shape1.radius + shape2.radius;
@@ -211,5 +213,6 @@ bool final_collision(circle &shape1, circle &shape2, float slop) {
     deltaB.multiply(shape1.mass/(shape1.mass + shape2.mass));
     shape2.position.add(deltaB);
     shape1.position.subtract(deltaA);
+    res = mtv;
     return true;
 }

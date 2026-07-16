@@ -17,11 +17,11 @@ void game::update(float dt) {
         obj.accelerate(dt);
         obj.force = vector2d();
         obj.move(dt);
-        wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
+        wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 50);
     }
     space_partition(objects);
     for(auto &obj : objects) {
-         wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 10);
+         wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 50);
     }
 }
 
