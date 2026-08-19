@@ -25,8 +25,8 @@ void game::update(float dt) {
     }
 }
 
-void game::add(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass) {
-    objects.push_back(circle(n_radius, n_sides, n_position, n_velocity, n_mass));
+void game::add(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass, float n_e) {
+    objects.push_back(circle(n_radius, n_sides, n_position, n_velocity, n_mass, n_e));
 }
 
 void game::add_static(float n_radius, int n_sides, vector2d n_position) {

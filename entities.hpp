@@ -14,13 +14,14 @@ class circle {
     vector2d force;
     float mass;
     float angle;
+    float e; //number bettween 0 and 1 representing bounciness
 
     // color
     int red; 
     int green;
     int blue;
 
-    circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass);
+    circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass, float n_e);
     circle(float n_radius, int n_sides, vector2d n_position); //for static objs
     void fill_array(sf::VertexArray &triangles, int &idx);
     void move(float dt);

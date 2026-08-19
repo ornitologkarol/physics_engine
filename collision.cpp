@@ -1,5 +1,4 @@
 #include <cmath>
-#include <cstdlib>
 #include "basic_math.hpp"
 #include "entities.hpp"
 #include "collision.hpp"
@@ -160,7 +159,8 @@ void collision_resolve(circle& shape1, circle& shape2, vector2d mtv) {
     // - delta v1 = J/m1, delta v2 = -J/m2
     
     
-    float e = 1.f;
+    float e = (shape1.e + shape2.e)/2;
+    //float e = shape1.e * shape2.e;
     
     //vector2d normal = shape1.position;
     //normal.subtract(shape2.position);

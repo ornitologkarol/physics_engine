@@ -5,10 +5,11 @@
 
 #define DOUBLE_PI 6.28318530718f
 
-circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass) :
+circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass, float n_e) :
     is_static(false),
     radius(n_radius),
     sides(n_sides),
+    e(n_e),
     position(n_position),
     velocity(n_velocity),
     force(vector2d()),
@@ -22,6 +23,7 @@ circle::circle(float n_radius, int n_sides, vector2d n_position) :
     is_static(true),
     radius(n_radius),
     sides(n_sides),
+    e(0.0),
     position(n_position),
     velocity(),
     force(vector2d()),
