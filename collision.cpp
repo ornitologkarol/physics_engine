@@ -32,6 +32,9 @@ bool wall_collision(circle& shape, int window_width, int window_height, float sl
 }
 
 bool sat(circle &shape1, circle &shape2, vector2d &mtv, float slop) {
+    // we always add mtv to shape2 and substract from shape 1
+    // inverse is meant to account for that distinction
+    // so mtv always points from B to A
     bool inverse = false;
     vector2d points1[shape1.sides], points2[shape2.sides], edges_perp1[shape1.sides], edges_perp2[shape2.sides];
 

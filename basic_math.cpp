@@ -48,8 +48,10 @@ void vector2d::rotate(float angle) {
 
 void vector2d::normalize() {
     float dist = lenght();
-    x /= dist;
-    y /= dist;
+    if (dist != 0) {
+        x /= dist;
+        y /= dist;
+    }
 }
 
 float dot(vector2d a, vector2d b) {

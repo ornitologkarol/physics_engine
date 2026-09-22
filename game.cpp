@@ -17,6 +17,7 @@ void game::update(float dt) {
         obj.accelerate(dt);
         obj.force = vector2d();
         obj.move(dt);
+        obj.angle_move(dt);
         wall_collision(obj, Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, 50);
     }
     space_partition(objects);

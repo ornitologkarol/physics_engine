@@ -1,9 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <cmath>
 #include "basic_math.hpp"
 #include "entities.hpp"
 
 #define DOUBLE_PI 6.28318530718f
+#define PI 3.14159265359f
 
 circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velocity, float n_mass, float n_e) :
     is_static(false),
@@ -14,6 +16,7 @@ circle::circle(float n_radius, int n_sides, vector2d n_position, vector2d n_velo
     velocity(n_velocity),
     force(vector2d()),
     mass(n_mass),
+    angle_velocity(0.f),
     angle(0.f),
     red(rand()%256),
     green(rand()%256),
@@ -28,6 +31,7 @@ circle::circle(float n_radius, int n_sides, vector2d n_position) :
     velocity(),
     force(vector2d()),
     mass(10000000000),
+    angle_velocity(0.f),
     angle(0.f),
     red(rand()%256),
     green(rand()%256),
@@ -77,6 +81,10 @@ void circle::move(float dt) {
     position.y += velocity.y * dt;
 }
 
+void circle::angle_move(float dt) {
+    angle += angle_velocity * dt;
+}
+
 void circle::accelerate(float dt) {
     velocity.x += force.x/mass * dt;
     velocity.y += force.y/mass * dt;
@@ -94,11 +102,23 @@ void circle::get_points_edges(vector2d* points, vector2d* edges) {
         rotation += angle_change;
     }
 
-    for (int i=0; i < sides; i++) {
-        vector2d edge = points[(i+1)%sides];
-        edge.subtract(points[i]);
-        edge = edge.perpendicular();
-        edges[i] = edge;
+    if (edges != NULL) {
+        for (int i=0; i < sides; i++) {
+            vector2d edge = points[(i+1)%sides];
+            edge.subtract(points[i]);
+            edge = edge.perpendicular();
+            edges[i] = edge;
+        }
     }
-   
+}
+
+float circle::polygon_inertia() {
+    float temp = cosf(PI/sides);
+    return mass * radius * radius * (1 + 2 * temp * temp) / 6.f;
+}
+
+vector2d circle::offset_vector(vector2d contact) {
+    vector2d offset = contact;
+    offset.subtract(position);
+    return offset;
 }
