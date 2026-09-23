@@ -39,6 +39,27 @@ edge best(circle &shape, vector2d n) {
     }
 }
 
+void clip(vector2d v1, vector2d v2, vector2d normal, float o, vector2d* cp, int &l) {
+    l = 0;
+    float d1 = dot(normal, v1) - o;
+    float d2 = dot(normal, v2) - o;
+    if (d1 >= 0) {
+        cp[l++] = v1;
+    }
+    if (d2 >= 0) {
+        cp[l++] = v2;
+    }
+
+    if (d1 * d2 < 0.0) {
+        vector2d e = v2;
+        e.subtract(v1);
+        float a = d1 / (d1 - d2);
+        e.multiply(a);
+        e.add(v1);
+        cp[l++] = e;
+    }
+}
+
 vector2d contact_point(circle &shape1, circle &shape2, vector2d mtv) {
     //Sutherland–Hodgman algorithm from dyn4j website
     mtv.normalize();
@@ -47,8 +68,8 @@ vector2d contact_point(circle &shape1, circle &shape2, vector2d mtv) {
     // mtv always points from B to A
     edge e1 = best(shape1, vector2d(-n.x, -n.y));
     edge e2 = best(shape2, n);
-    vector2d e1v = vector2d(e1.max.x - e1.second_point.x, e1.max.y - e1.second_point.y);
-    vector2d e2v = vector2d(e2.max.x - e2.second_point.x, e2.max.y - e2.second_point.y);
+    vector2d e1v = vector2d(e1.second_point.x - e1.max.x, e1.second_point.y - e1.max.y);
+    vector2d e2v = vector2d(e2.second_point.x - e2.max.x, e2.second_point.y - e2.max.y);
 
     //now we look for reference and incident edge
     edge ref, inc;
@@ -66,5 +87,33 @@ vector2d contact_point(circle &shape1, circle &shape2, vector2d mtv) {
         e2v.normalize();
         normal = e2v;
     }
+    //first clipping
+    vector2d cp[2];
+    int l;
+    float o = dot(normal, ref.max);
+    clip(inc.max, inc.second_point, normal, o, cp, l);
+    if (l < 2) return vector2d();
 
+    //second clipping
+    o = dot(normal, ref.second_point);
+    clip(cp[0], cp[1], vector2d(-normal.x, -normal.y), -o, cp, l);
+    if (l < 2) return vector2d();
+
+    //third clipping
+    vector2d normalperp = normal.perpendicular();
+    if (flip) normalperp.multiply(-1);
+    o = dot(normalperp, ref.max);
+    // normalperp points outwards so we clip those with positive value
+    if (dot(normalperp, cp[0]) - o > 0.0) {
+        cp[0] = cp[1];
+        l--;
+    }
+    if (dot(normalperp, cp[1]) - o > 0.0) {
+        l--;
+    }
+
+    //returning contact point
+    if (l == 1) return cp[0];
+    if (l == 2) return vector2d((cp[0].x + cp[1].x)/2, (cp[0].y + cp[1].y)/2);
+    return vector2d();
 }

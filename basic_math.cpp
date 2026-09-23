@@ -35,6 +35,7 @@ void vector2d::multiply(float num) {
 }
 
 vector2d vector2d::perpendicular() {
+    // vector will point outwards
     return vector2d(-y, x);
 }
 

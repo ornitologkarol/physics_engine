@@ -92,6 +92,7 @@ void circle::accelerate(float dt) {
 
 void circle::get_points_edges(vector2d* points, vector2d* edges) {
     //edges are actually perpendicular for sat
+    // this is a CLOCKWISE direction
     
     float angle_change = DOUBLE_PI / static_cast<float>(sides);
     float rotation = angle;
