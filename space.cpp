@@ -59,9 +59,9 @@ void space_partition(std::vector<circle> &shapes) {
                         if(r+x >= rows || c+y >= columns || r+x <0 || c+y < 0) continue;
                         int m = grid[(r+x) * columns + (c+y)];
                         while (m != -1) {
-                            vector2d mtv;
-                            if( m < l && final_collision(shapes[m], shapes[l], mtv)) {
-                                collision_resolve(shapes[m], shapes[l], mtv);
+                            vector2d mtv, contact;
+                            if( m < l && final_collision(shapes[m], shapes[l], mtv, contact)) {
+                                collision_resolve(shapes[m], shapes[l], mtv, contact);
                             }
                             m = prev_idx[m];
                         }
@@ -75,14 +75,14 @@ void space_partition(std::vector<circle> &shapes) {
      for(int i : big_idx) { // if there are few big shapes this is linear
          for(int j=0; j<shapes.size(); j++) {
              if (shapes[j].radius > Config::MAX_RADIUS) {
-                 vector2d mtv;
-                 if (i < j && final_collision(shapes[i], shapes[j], mtv)) {
-                     collision_resolve(shapes[i], shapes[j], mtv);
+                 vector2d mtv, contact;
+                 if (i < j && final_collision(shapes[i], shapes[j], mtv, contact)) {
+                     collision_resolve(shapes[i], shapes[j], mtv, contact);
                  }
              } else {
-                 vector2d mtv;
-                 if( i != j && final_collision(shapes[i], shapes[j], mtv)) {
-                     collision_resolve(shapes[i], shapes[j], mtv);
+                 vector2d mtv, contact;
+                 if( i != j && final_collision(shapes[i], shapes[j], mtv, contact)) {
+                     collision_resolve(shapes[i], shapes[j], mtv, contact);
                  }
              }
          }

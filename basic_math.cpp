@@ -58,3 +58,6 @@ void vector2d::normalize() {
 float dot(vector2d a, vector2d b) {
     return (a.x * b.x) + (a.y * b.y);
 }
+float cross(vector2d a, vector2d b) {
+    return a.x * b.y - a.y * b.x;
+}

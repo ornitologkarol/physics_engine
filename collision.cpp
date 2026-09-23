@@ -2,6 +2,7 @@
 #include "basic_math.hpp"
 #include "entities.hpp"
 #include "collision.hpp"
+#include "clipping.hpp"
 
 bool wall_collision(circle& shape, int window_width, int window_height, float slop) {
     vector2d mtv;
@@ -153,44 +154,44 @@ bool circle_collision(circle &shape1, circle &shape2, vector2d &mtv, float slop)
     return false;
 }
 
-void collision_resolve(circle& shape1, circle& shape2, vector2d mtv) {
+void collision_resolve(circle& shape1, circle& shape2, vector2d mtv, vector2d contact) {
     // impulse based collision resolver
     // this works this way:
     // - we project relative speed onto the normal (collision axis) = vreln
-    // - we use this equation for magnitude j = (1+e)*vreln / (1/m1 + 1/m2)
-    // - we make it a vector J = j*n
+    // - we use this equation for magnitude = (1+e)*vreln / { (1/m1 + 1/m2) + [((ra x n) x rb)/Ia + ((rb x n) x rb)/Ib] * n}
+    // - in our case for 2d it reduces to: magnitude = (1*e) * vreln / { 1/m1 + 1/m2 + (ra x n)^2/Ia + (ra x n)^2/Ib }
+    // - we make it an vector J = magnitude * normal
     // - delta v1 = J/m1, delta v2 = -J/m2
     
     
     float e = (shape1.e + shape2.e)/2;
-    //float e = shape1.e * shape2.e;
     
-    //vector2d normal = shape1.position;
-    //normal.subtract(shape2.position);
-    //float distance = normal.lenght();
-    //normal.multiply(1/distance);
     vector2d normal = mtv;
     normal.normalize();
-
-    vector2d v_rel = shape2.velocity;
-    v_rel.subtract(shape1.velocity);
-
+    vector2d v_rel = shape2.velocity - shape1.velocity;
     float normal_rel = dot(normal, v_rel);
     float inv_mass = 1.f/shape1.mass + 1.f/shape2.mass;
-    float magnitude = (1.f+e) * normal_rel / inv_mass;
+    vector2d r1 = contact - shape1.position;
+    vector2d r2 = contact - shape2.position;
+    float i1 = shape1.polygon_inertia();
+    float i2 = shape2.polygon_inertia();
+    float part1 = cross(r1, normal) * cross(r1, normal) / i1;
+    float part2 = cross(r2, normal) * cross(r2, normal) / i2;
 
-    vector2d impulse = normal;
-    impulse.multiply(magnitude);
-    vector2d delta1 = impulse;
-    delta1.multiply(1.f/shape1.mass);
-    vector2d delta2 = impulse;
-    delta2.multiply(1.f/shape2.mass);
+    float magnitude = (1.f + e) * normal_rel / (inv_mass + part1 + part2);
+    vector2d impulse = magnitude * normal;
 
+    vector2d delta1 = impulse * (1.f/shape1.mass);
+    vector2d delta2 = impulse * (1.f/shape2.mass);
     shape1.velocity.add(delta1);
     shape2.velocity.subtract(delta2);
+    float delta_ang1 = cross(r1, impulse) / i1;
+    float delta_ang2 = cross(r2, impulse) / i2;
+    shape1.angle_velocity += delta_ang1;
+    shape2.angle_velocity += delta_ang2;
 }
 
-bool final_collision(circle &shape1, circle &shape2, vector2d &res, float slop) {
+bool final_collision(circle &shape1, circle &shape2, vector2d &res, vector2d &contact, float slop) {
     // broadest phase
     float dist = (shape1.position.x - shape2.position.x) * (shape1.position.x - shape2.position.x)  + (shape1.position.y - shape2.position.y) *(shape1.position.y - shape2.position.y);
     float rad_sum = shape1.radius + shape2.radius;
@@ -209,6 +210,8 @@ bool final_collision(circle &shape1, circle &shape2, vector2d &res, float slop) 
     } else {
         if(!circle_collision(shape1, shape2, mtv, slop)) return false;
     }
+
+    contact = contact_point(shape1, shape2, mtv);
 
     vector2d deltaA = mtv;
     vector2d deltaB = mtv;
