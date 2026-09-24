@@ -155,6 +155,7 @@ bool circle_collision(circle &shape1, circle &shape2, vector2d &mtv, float slop)
 }
 
 void collision_resolve(circle& shape1, circle& shape2, vector2d mtv, vector2d contact) {
+    if (contact.x == 0.0 && contact.y == 0.0) return;
     // impulse based collision resolver
     // this works this way:
     // - we project relative speed onto the normal (collision axis) = vreln
@@ -187,7 +188,7 @@ void collision_resolve(circle& shape1, circle& shape2, vector2d mtv, vector2d co
     shape2.velocity.subtract(delta2);
     float delta_ang1 = cross(r1, impulse) / i1;
     float delta_ang2 = cross(r2, impulse) / i2;
-    shape1.angle_velocity += delta_ang1;
+    shape1.angle_velocity -= delta_ang1;
     shape2.angle_velocity += delta_ang2;
 }
 

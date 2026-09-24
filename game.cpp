@@ -13,7 +13,7 @@ game::game(int width, int height) : triangles(sf::PrimitiveType::Triangles, 1000
 void game::update(float dt) {
     for(auto &obj : objects) {
         if(obj.is_static) continue;
-        obj.force = vector2d(0, 10000);
+        //obj.force = vector2d(0, 10000);
         obj.accelerate(dt);
         obj.force = vector2d();
         obj.move(dt);

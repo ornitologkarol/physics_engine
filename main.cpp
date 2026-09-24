@@ -19,7 +19,7 @@ int main() {
     game game(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT);
     
     while(window.isOpen()) {
-        std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
+//        std::cout << int(1.0/dt) << " " << game.objects.size() << "\n";
 
         sf::Time elapsed = clock.restart();
         dt = elapsed.asSeconds(); // calculating deltatime
@@ -29,13 +29,13 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(50, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0, 1.0);
+                    game.add(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0, 0.0);
                     game.objects[game.objects.size()-1].angle += 3.14/4.0;
                 }
                 if(event.mouseButton.button == sf::Mouse::Right) {
-                    game.add_static(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y));
-                    game.objects[game.objects.size()-1].angle += 3.14/4.0;
-                    //game.add(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(1000, 180, false),20.0);
+                    //game.add_static(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y));
+                    //game.objects[game.objects.size()-1].angle += 3.14/4.0;
+                    game.add(10, 50, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(1000, 0, false),20.0, 0.0);
                 }
             }
             if (event.type == sf::Event::KeyPressed) {

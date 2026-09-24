@@ -15,7 +15,7 @@ class circle {
     float mass;
     float angle_velocity;
     float angle;
-    float e; //number bettween 0 and 1 representing bounciness
+    float e; //number bettween 0 and 1 representing bounciness with 0 - no bounce, 1 - super bouncy
 
     // color
     int red; 

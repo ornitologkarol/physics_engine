@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cmath>
 #include "basic_math.hpp"
 #include "entities.hpp"
@@ -101,7 +102,11 @@ vector2d contact_point(circle &shape1, circle &shape2, vector2d mtv) {
 
     //third clipping
     vector2d normalperp = normal.perpendicular();
-    if (flip) normalperp.multiply(-1);
+    // since mtv = n and it points always from B to A then if ref is B's edge (flip is true) then n points OUTSIDE of B in other case n points INSIDE A so we flip it
+    vector2d expected_outward = flip ? n : vector2d(-n.x, -n.y);
+    // next line means that if angle between normalperp and expected_outward is more than 90 degrees (which mean normalperp is on the other side) we flip it
+    if(dot (normalperp, expected_outward) <0.0) normalperp.multiply(-1); 
+    
     o = dot(normalperp, ref.max);
     // normalperp points outwards so we clip those with positive value
     if (dot(normalperp, cp[0]) - o > 0.0) {
