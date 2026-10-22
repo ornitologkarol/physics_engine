@@ -110,7 +110,7 @@ bool sat(circle &shape1, circle &shape2, vector2d &mtv, float slop) {
         }
     }
 
-    float dist = min_mtv.lenght();
+    float dist = min_mtv.length();
     if (fabs(dist) <= 1e-9) { // risk of division by zero
         dist = 1;
         float temp = ((double)rand()) / RAND_MAX;

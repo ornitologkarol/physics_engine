@@ -7,15 +7,15 @@ vector2d::vector2d() : x(0), y(0) {}
 
 vector2d::vector2d(float a, float b) : x(a), y(b) {}
 
-vector2d::vector2d(float lenght, float angle, bool radians) {
+vector2d::vector2d(float length, float angle, bool radians) {
     float rad = angle;
     if (!radians)
         rad *= PI / 180.f;
-    x = std::cos(rad) * lenght;
-    y = -std::sin(rad) * lenght; // negative sign, since the SFML has downward-pointing y-axis  
+    x = std::cos(rad) * length;
+    y = -std::sin(rad) * length; // negative sign, since the SFML has downward-pointing y-axis  
 }
 
-float vector2d::lenght() {
+float vector2d::length() {
     return std::sqrt((x * x) + (y * y));
 }
 
@@ -48,7 +48,7 @@ void vector2d::rotate(float angle) {
 }
 
 void vector2d::normalize() {
-    float dist = lenght();
+    float dist = length();
     if (dist != 0) {
         x /= dist;
         y /= dist;

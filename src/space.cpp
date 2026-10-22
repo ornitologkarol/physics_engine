@@ -1,6 +1,5 @@
 #include <cmath>
 #include <algorithm>
-#include <iostream>
 #include <vector>
 
 #include "entities.hpp"
@@ -11,10 +10,10 @@
 
 
 void space_partition(std::vector<circle> &shapes) {
-    constexpr int rows = Config::WINDOW_WIDTH / Config::MAX_RADIUS;
-    constexpr int columns = Config::WINDOW_HEIGHT / Config::MAX_RADIUS;
+    int rows = Config::WINDOW_WIDTH / Config::MAX_RADIUS;
+    int columns = Config::WINDOW_HEIGHT / Config::MAX_RADIUS;
 
-    static int grid[rows * columns]; // our grid stores the index of the last obj each cell
+    int grid[rows * columns]; // our grid stores the index of the last obj each cell
     for(int i=0; i< rows * columns; i++) {
         grid[i] = -1;
     }

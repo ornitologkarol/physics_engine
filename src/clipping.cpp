@@ -1,4 +1,3 @@
-#include <iostream>
 #include <cmath>
 #include "basic_math.hpp"
 #include "entities.hpp"

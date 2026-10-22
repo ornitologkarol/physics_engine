@@ -8,7 +8,7 @@ class vector2d {
     vector2d();
     vector2d(float a, float b);
     vector2d(float lenght, float angle, bool radians);
-    float lenght();
+    float length();
     void add(vector2d v);
     void subtract(vector2d v);
     void multiply(float num);
@@ -23,6 +23,9 @@ class vector2d {
     }
     vector2d operator*(float num) const {
         return vector2d(x * num, y * num);
+    }
+    float operator*(const vector2d& v) const {
+        return x * v.x + y * v.y;
     }
     
 };
