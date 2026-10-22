@@ -26,7 +26,7 @@ void space_partition(std::vector<circle> &shapes) {
 
     int idx = 0;
     for (auto &shape : shapes) {
-        if(shape.radius > static_cast<float>(Config::MAX_RADIUS)) { // we check if the object isnt to big
+        if(shape.radius > Config::WINDOW_WIDTH / rows / 2 || shape.radius > Config::WINDOW_HEIGHT / columns / 2) { // we check if the object isnt to big
             big_idx.push_back(idx);
             prev_idx.push_back(-1);
             idx++;
@@ -73,7 +73,7 @@ void space_partition(std::vector<circle> &shapes) {
 
      for(int i : big_idx) { // if there are few big shapes this is linear
          for(int j=0; j<shapes.size(); j++) {
-             if (shapes[j].radius > Config::MAX_RADIUS) {
+             if (shapes[j].radius > Config::WINDOW_WIDTH / rows / 2 || shapes[j].radius > Config::WINDOW_HEIGHT / columns / 2) {
                  vector2d mtv, contact;
                  if (i < j && final_collision(shapes[i], shapes[j], mtv, contact)) {
                      collision_resolve(shapes[i], shapes[j], mtv, contact);

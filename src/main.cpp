@@ -29,7 +29,7 @@ int main() {
                 window.close();
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    game.add(100, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0, 0.0);
+                    game.add(50, 4, vector2d(event.mouseButton.x, event.mouseButton.y), vector2d(0, 0, false),20.0, 0.0);
                     game.objects[game.objects.size()-1].angle += 3.14/4.0;
                 }
                 if(event.mouseButton.button == sf::Mouse::Right) {
