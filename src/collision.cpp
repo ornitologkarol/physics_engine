@@ -171,6 +171,7 @@ void collision_resolve(circle& shape1, circle& shape2, vector2d mtv, vector2d co
     normal.normalize();
     vector2d v_rel = shape2.velocity - shape1.velocity;
     float normal_rel = dot(normal, v_rel);
+    if (normal_rel >= 0.f) return; // if objects are seperating no need to resolve collision
     float inv_mass = 1.f/shape1.mass + 1.f/shape2.mass;
     vector2d r1 = contact - shape1.position;
     vector2d r2 = contact - shape2.position;

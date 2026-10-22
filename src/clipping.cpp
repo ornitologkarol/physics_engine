@@ -32,7 +32,7 @@ edge best(circle &shape, vector2d n) {
     left.normalize();
     right.normalize();
     // the edge that has the smaller projection is more perpendicular
-    if (dot(left, n) <= dot(right, n)) {
+    if (std::fabs(dot(left, n)) <= std::fabs(dot(right, n))) {
         return edge{v, v0};
     } else {
         return edge{v, v1};
